@@ -21,8 +21,8 @@ class SignInSolver(BaseSolver):
         self.tm = TaskManager(
             [
                 "monthly_card",  # 五周年专享月卡
-                "orundum",  # 限时开采许可
-                "headhunting",  # 每日赠送单抽
+                #"orundum", 限时开采许可
+                #"headhunting", 每日赠送单抽
             ]
         )
 

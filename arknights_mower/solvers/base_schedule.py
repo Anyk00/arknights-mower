@@ -3667,7 +3667,7 @@ class BaseSchedulerSolver(SceneGraphSolver, BaseMixin):
                 self.initialize_maa()
                 if tasks == "All":
                     tasks = ["StartUp", "Fight", "Mall", "Award"]
-                    # tasks.append("Recruit")
+                    tasks.append("Recruit")
                 for maa_task in tasks:
                     self.append_maa_task(maa_task)
                 self.MAA.start()

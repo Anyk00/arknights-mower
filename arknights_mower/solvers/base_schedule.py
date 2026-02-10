@@ -3720,7 +3720,8 @@ class BaseSchedulerSolver(SceneGraphSolver, BaseMixin):
                 # 任务及参数请参考 docs/集成文档.md
                 self.initialize_maa()
                 if tasks == "All":
-                    tasks = ["StartUp", "Fight", "Mall", "Award", "Recruit"]
+                    tasks = ["StartUp", "Fight", "Mall", "Award"]
+                    tasks = ["StartUp", "Fight", "Mall", "Recruit", "Award"]
                 for maa_task in tasks:
                     self.append_maa_task(maa_task)
                 self.MAA.start()

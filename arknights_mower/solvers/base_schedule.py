@@ -3679,7 +3679,7 @@ class BaseSchedulerSolver(SceneGraphSolver, BaseMixin):
                     "refresh": True,
                     "times": 4,
                     "select": [3, 4],
-                    "confirm": [3, 4],
+                    "confirm": [4],
                     "skip_robot": True,
                 },
             )

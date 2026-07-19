@@ -376,10 +376,8 @@ class MuMu12IPC:
             return np.flipud(frame)
         except Exception as e:
             logger.error(f"capture_display error: {e}")
-            # Attempt soft recovery for next call
             self._conn = 0
             self._display_id = -1
-            self.device.exit()
             return np.zeros((self._H, self._W, 3), dtype=np.uint8)
 
     def _map_xy(self, x: int, y: int) -> tuple[int, int]:

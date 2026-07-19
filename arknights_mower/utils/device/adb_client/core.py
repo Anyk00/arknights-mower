@@ -76,14 +76,14 @@ class Client:
         """return available devices"""
         return [x[0] for x in Session().devices_list() if x[1] != "offline"]
 
-    def __exec(self, cmd: str, adb_bin: str = None) -> None:
+    def __exec(self, cmd: str, adb_bin: str = None, check: bool = True) -> None:
         """exec command with adb_bin"""
         logger.debug(f"client.__exec: {cmd}")
         if adb_bin is None:
             adb_bin = self.adb_bin
         subprocess.run(
             [adb_bin, cmd],
-            check=True,
+            check=check,
             creationflags=subprocess.CREATE_NO_WINDOW if __system__ == "windows" else 0,
         )
 
@@ -99,8 +99,8 @@ class Client:
                     error_limit -= 1
                     if self.device_id and connect_retry > 0:
                         connect_retry -= 1
-                        self.__exec(f"disconnect {self.device_id}")
-                        self.__exec(f"connect {self.device_id}")
+                        self.__exec(f"disconnect {self.device_id}", check=False)
+                        self.__exec(f"connect {self.device_id}", check=False)
                         time.sleep(0.5)
                     else:
                         self.__exec("kill-server")
@@ -148,8 +148,8 @@ class Client:
                     error_limit -= 1
                     # 只断开并重连当前设备，避免影响其他adb连接
                     if self.device_id:
-                        self.__exec(f"disconnect {self.device_id}")
-                        self.__exec(f"connect {self.device_id}")
+                        self.__exec(f"disconnect {self.device_id}", check=False)
+                        self.__exec(f"connect {self.device_id}", check=False)
                         time.sleep(3)
                         self.__init_device()
                     else:

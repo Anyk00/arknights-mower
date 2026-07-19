@@ -1009,6 +1009,6 @@ print("训练训练室干员名的模型,完成")
 
 数据处理器.添加基建技能图标()
 
-数据处理器.load_recruit_resource()
+#数据处理器.load_recruit_resource()
 
 数据处理器.获取加工站配方类别()

@@ -82,6 +82,11 @@ def operator_list(img, draw=False, full_scan=True):
         for p in name_p:
             cv2.rectangle(display, p[0], p[1], (255, 0, 0), 3)
         display = cv2.cvtColor(display, cv2.COLOR_RGB2BGR)
+        scale_percent = 66.67  # 缩放比例
+        width = int(display.shape[1] * scale_percent / 100)
+        height = int(display.shape[0] * scale_percent / 100)
+        dim = (width, height)
+        display = cv2.resize(display, dim, interpolation=cv2.INTER_AREA)
         cv2.imshow("Image", display)
         cv2.waitKey(0)
         cv2.destroyAllWindows()

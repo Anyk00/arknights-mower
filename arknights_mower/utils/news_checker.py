@@ -83,7 +83,14 @@ class NewsChecker:
                     start_dt = datetime(
                         year, month, day, start_h, start_m, tzinfo=news_tz
                     )
+                    if end_h == 24:
+                        end_h = 0
+                        dayplus = True
+                    else:
+                        dayplus = False
                     end_dt = datetime(year, month, day, end_h, end_m, tzinfo=news_tz)
+                    if dayplus:
+                        end_dt = end_dt + timedelta(days=1)
                     start_dt_local = start_dt.astimezone(local_tz).replace(tzinfo=None)
                     end_dt_local = end_dt.astimezone(local_tz).replace(tzinfo=None)
 

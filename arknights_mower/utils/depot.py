@@ -19,11 +19,16 @@ def 读取仓库():
     with open(path, "r", encoding="utf-8") as f:
         depotinfo = json.load(f)
     物品数量 = depotinfo["data"]["items"]
-    新物品1 = {
-        key_mapping[item["id"]][2]: int(item["count"])
-        for item in 物品数量
-        if int(item["count"]) != 0
-    }
+    新物品1 = {}
+    for item in 物品数量:
+        item_id = item["id"]
+        count = int(item["count"])
+        if count != 0:
+            if item_id in key_mapping:
+                新物品1[key_mapping[item_id][2]] = count
+            else:
+                from arknights_mower.utils.log import logger
+                logger.warning(f"仓库扫描: 物品ID {item_id} 在本地映射中不存在，已跳过")
 
     csv_path = get_path("@app/tmp/depotresult.csv")
     if not os.path.exists(csv_path):
@@ -40,8 +45,12 @@ def 读取仓库():
     for k in workshop_formula.keys():
         db_dict[k] = 0
     for item in 新物品:
-        新物品json[key_mapping[item][0]] = 新物品[item]
-        db_dict[key_mapping[item][2]] = 新物品[item]
+        if item in key_mapping:
+            新物品json[key_mapping[item][0]] = 新物品[item]
+            db_dict[key_mapping[item][2]] = 新物品[item]
+        else:
+            from arknights_mower.utils.log import logger
+            logger.warning(f"仓库扫描: 物品名称 '{item}' 在本地映射中不存在，已跳过")
     time = depotinfo.iloc[-1, 0]
     save_inventory_counts(db_dict)
     sort = {
@@ -143,27 +152,30 @@ def 读取仓库():
     classified_data = {}
     classified_data["K未分类"] = {}
     for category, items in sort.items():
-        classified_data[category] = {
-            item: {"number": 0, "sort": key_mapping[item][4], "icon": item}
-            for item in items
-        }
+        classified_data[category] = {}
+        for item in items:
+            if item in key_mapping:
+                classified_data[category][item] = {"number": 0, "sort": key_mapping[item][4], "icon": item}
+            else:
+                classified_data[category][item] = {"number": 0, "sort": 9999999, "icon": item}
 
     for key, value in 新物品.items():
         found_category = False
         for category, items in sort.items():
             if key in items:
+                sort_value = key_mapping[key][4] if key in key_mapping else 9999999
                 classified_data[category][key] = {
                     "number": value,
-                    "sort": key_mapping[key][4],
+                    "sort": sort_value,
                     "icon": key,
                 }
                 found_category = True
                 break
         if not found_category:
-            # 如果未找到匹配的分类，则放入 "K未分类" 中
+            sort_value = key_mapping[key][4] if key in key_mapping else 9999999
             classified_data["K未分类"][key] = {
                 "number": value,
-                "sort": key_mapping[key][4],
+                "sort": sort_value,
                 "icon": key,
             }
 

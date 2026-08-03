@@ -86,12 +86,22 @@ onUnmounted(() => {
   }
 })
 
-function start(value) {
+async function start(value) {
   running.value = true
   log_lines.value = []
   if (value == undefined) {
     value = '0'
   }
+
+  // 先测试 MAA 连接
+  try {
+    const maa_response = await axios.get(`${import.meta.env.VITE_HTTP_URL}/check-maa`)
+    console.log('MAA 连接测试结果:', maa_response.data)
+  } catch (error) {
+    console.error('MAA 测试连接失败:', error)
+  }
+
+  // 启动 mower（即使测试失败也继续）
   axios.get(`${import.meta.env.VITE_HTTP_URL}/start/${value}`)
   get_tasks()
 }
